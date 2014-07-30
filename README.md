@@ -1,0 +1,7 @@
+SezzUnitFrames
+===============
+
+WildStar Unit Frames Library
+
+# DO NOT USE THIS - IT MAY CONTAIN HARDCODED STUFF FOR TESTING
+# THERE WILL BE A DOCUMENTATION WHEN IT'S READY
