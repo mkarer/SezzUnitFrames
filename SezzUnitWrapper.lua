@@ -285,10 +285,7 @@ function UnitFrameController:GetUnit(strUnit, nIndex)
 		if (nIndex == nil) then
 			-- Non-Party/Non-Raid
 			if (strUnit == "Player") then
-				if (not tCache[strUnit] or (tCache[strUnit] and tCache[strUnit]:GetId() ~= unit:GetId())) then
-					tCache[strUnit] = WrapRealUnit(unitPlayer, 1); -- AFAIK the player always has index 1 in groups?
-				end
-
+				tCache[strUnit] = WrapRealUnit(unitPlayer, 1); -- AFAIK the player always has index 1 in groups?
 				return tCache[strUnit];
 			elseif (strUnit == "Target") then
 				return WrapRealUnit(unitPlayer:GetTarget());
