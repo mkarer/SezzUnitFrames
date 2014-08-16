@@ -251,7 +251,7 @@ local function UpdateGroupMemberData(strUnit, nIndex, tData)
 	end
 
 	if (tCache[strUnit].bUpdated) then
-		S.Log:debug("Updated cached group unit data for "..tData.strCharacterName)
+--		S.Log:debug("Updated cached group unit data for "..tData.strCharacterName)
 		Event_FireGenericEvent("Sezz_GroupUnitUpdated", nIndex);
 	end
 end
