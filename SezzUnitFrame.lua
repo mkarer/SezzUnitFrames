@@ -34,9 +34,9 @@ local log, ToolTips, GeminiGUI, UnitFrameController;
 -----------------------------------------------------------------------------
 
 local EnableTags = function(self)
-	if (#self.tTagControls == 0 and self.tControls.Text) then
+ 	if (#self.tTagControls == 0 and self.tControls.Text) then
 		for _, wndControl in ipairs(self.tControls.Text) do
-			self:Tag(wndControl, { Tags = wndControl:GetData().Tags, Interval = 50 });
+			self:Tag(wndControl, wndControl:GetData());
 		end
 	end
 end
