@@ -238,6 +238,7 @@ local tags = setmetatable(
 _ENV._TAGS = tags;
 
 local tagEvents = {
+	["Role"]				= "Sezz_GroupUnitRoleChanged",
 	["Name"]				= "UnitNameChanged",
 	["Level"]				= "UnitLevelChanged Sezz_GroupUnitLevelChanged",
 	["TDifficultyColor"]	= "UnitLevelChanged Sezz_GroupUnitLevelChanged PlayerLevelChange",
