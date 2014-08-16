@@ -25,7 +25,7 @@ local fnTrue = function() return true; end
 local fnFalse = function() return false; end
 
 local fnUnitRole = function(self)
-	return (self.bHealer == true and "HEALER") or (self.bTank == true and "TANK") or "DAMAGER";
+	return (self.bHealer == true and "HEALER") or ((self.bTank == true or self.bMainTank == true) and "TANK") or "DAMAGER";
 end
 
 -----------------------------------------------------------------------------
