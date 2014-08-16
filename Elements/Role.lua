@@ -28,34 +28,26 @@ function Element:Update(strRole)
 	local unit = self.tUnitFrame.unit;
 	local wndrole = self.tUnitFrame.tControls.Role;
 
-	if ((strRole and strRole == "HEALER") or unit.bHealer) then
-		wndrole:SetSprite("SezzUF_RoleHealer");
-	elseif ((strRole and strRole == "TANK") or unit.bTank or unit.bMainTank) then
-		wndrole:SetSprite("SezzUF_RoleTank");
-	else
+	if (strRole == nil) then
+		strRole = unit:GetRole();
+	end
+
+	if (not strRole or strRole == "DAMAGER") then
 		wndrole:SetSprite(nil);
+	elseif (strRole == "HEALER") then
+		wndrole:SetSprite("SezzUF_RoleHealer");
+	elseif (strRole == "TANK") then
+		wndrole:SetSprite("SezzUF_RoleTank");
 	end
 end
 
-function Element:OnGroupMemberFlagsChanged(nIndex)
+function Element:OnGroupUnitRoleChanged(nIndex)
 	local unit = self.tUnitFrame.unit;
 
 	if (unit.nMemberIdx and unit.nMemberIdx == nIndex) then
-		-- tChangedFlags (3rd event argument) has old and new role enabled, this is useless and pretty sure a bug.
-		local tFlags = GroupLib.GetGroupMember(nIndex);
-		self:Update((tFlags.bTank or tFlags.bMainTank) and "TANK" or tFlags.bHealer and "HEALER" or "DAMAGER");
+		self:Update(unit:GetRole());
 	end
 end
-
---[[
-function Element:OnGroupOperationResult(strName, eResult)
-	local unit = self.tUnitFrame.unit;
-
-	if (unit:GetName() == strName and eResult == GroupLib.ActionResult.MemberFlagsSuccess) then
-		self:Update();
-	end
-end
---]]
 
 function Element:Enable()
 	-- Register Events
@@ -65,8 +57,7 @@ function Element:Enable()
 	if (self.bEnabled) then return; end
 
 	self.bEnabled = true;
-	Apollo.RegisterEventHandler("Group_MemberFlagsChanged", "OnGroupMemberFlagsChanged", self);
---	Apollo.RegisterEventHandler("Group_Operation_Result", "OnGroupOperationResult", self);
+	Apollo.RegisterEventHandler("Sezz_GroupUnitRoleChanged", "OnGroupUnitRoleChanged", self);
 	self:Update();
 end
 
@@ -75,8 +66,7 @@ function Element:Disable(bForce)
 	if (not self.bEnabled and not bForce) then return; end
 
 	self.bEnabled = false;
-	Apollo.RemoveEventHandler("Group_MemberFlagsChanged", self);
---	Apollo.RemoveEventHandler("Group_Operation_Result", self);
+	Apollo.RemoveEventHandler("Sezz_GroupUnitRoleChanged", self);
 end
 
 local IsSupported = function(tUnitFrame)
