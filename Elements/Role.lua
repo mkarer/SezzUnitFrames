@@ -28,9 +28,9 @@ function Element:Update(strRole)
 	local unit = self.tUnitFrame.unit;
 	local wndrole = self.tUnitFrame.tControls.Role;
 
-	if (unit.bHealer or (strRole and strRole == "Healer")) then
+	if ((strRole and strRole == "HEALER") or unit.bHealer) then
 		wndrole:SetSprite("SezzUF_RoleHealer");
-	elseif (unit.bTank or unit.bMainTank or (strRole and strRole == "Tank")) then
+	elseif ((strRole and strRole == "TANK") or unit.bTank or unit.bMainTank) then
 		wndrole:SetSprite("SezzUF_RoleTank");
 	else
 		wndrole:SetSprite(nil);
@@ -43,7 +43,7 @@ function Element:OnGroupMemberFlagsChanged(nIndex)
 	if (unit.nMemberIdx and unit.nMemberIdx == nIndex) then
 		-- tChangedFlags (3rd event argument) has old and new role enabled, this is useless and pretty sure a bug.
 		local tFlags = GroupLib.GetGroupMember(nIndex);
-		self:Update((tFlags.bTank or tFlags.bMainTank) and "Tank" or tFlags.bHealer and "Healer" or "DPS");
+		self:Update((tFlags.bTank or tFlags.bMainTank) and "TANK" or tFlags.bHealer and "HEALER" or "DAMAGER");
 	end
 end
 
