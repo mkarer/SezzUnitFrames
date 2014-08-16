@@ -280,6 +280,7 @@ function UnitFrameController:GetUnit(strUnit, nIndex)
 	if (unitPlayer and unitPlayer:IsValid()) then
 		if (nIndex == nil) then
 			-- Non-Party/Non-Raid
+			-- TODO: Cache those units?
 			if (strUnit == "Player") then
 				return WrapRealUnit(unitPlayer, 1); -- AFAIK the player always has index 1 in groups?
 			elseif (strUnit == "Target") then

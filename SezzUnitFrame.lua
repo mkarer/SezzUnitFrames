@@ -163,6 +163,10 @@ local SetUnit = function(self, unit)
 		else
 			self:Update();
 		end
+	elseif (self.unit and self.unit.nMemberIdx and self.unit:IsRealUnit() and self.unit:GetId() == unit:GetId()) then
+		-- Update Unit Reference (in case tFlags changed, should only affect "Player" an other non-raid/non-group units)
+		-- TODO: Add those units to UnitWrapper Cache?
+		self.unit = unit;
 	end
 end
 
