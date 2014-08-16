@@ -266,6 +266,10 @@ function UnitUpdater:OnGroupMemberFlagsChanged(nMemberIdx, bFromPromotion, tChan
 	if (bInRaid) then
 		UpdateGroupMemberData("Raid"..nMemberIdx, nMemberIdx, GroupLib.GetGroupMember(nMemberIdx) or {});
 	end
+
+	if (nMemberIdx == 1) then
+		UpdateGroupMemberData("Player", nMemberIdx, GroupLib.GetGroupMember(nMemberIdx) or {});
+	end
 end
 
 Apollo.RegisterEventHandler("Group_MemberFlagsChanged", "OnGroupMemberFlagsChanged", UnitUpdater);
@@ -280,9 +284,12 @@ function UnitFrameController:GetUnit(strUnit, nIndex)
 	if (unitPlayer and unitPlayer:IsValid()) then
 		if (nIndex == nil) then
 			-- Non-Party/Non-Raid
-			-- TODO: Cache those units?
 			if (strUnit == "Player") then
-				return WrapRealUnit(unitPlayer, 1); -- AFAIK the player always has index 1 in groups?
+				if (not tCache[strUnit] or (tCache[strUnit] and tCache[strUnit]:GetId() ~= unit:GetId())) then
+					tCache[strUnit] = WrapRealUnit(unitPlayer, 1); -- AFAIK the player always has index 1 in groups?
+				end
+
+				return tCache[strUnit];
 			elseif (strUnit == "Target") then
 				return WrapRealUnit(unitPlayer:GetTarget());
 			elseif (strUnit == "TargetOfTarget") then
