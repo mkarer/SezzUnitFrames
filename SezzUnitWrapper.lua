@@ -12,8 +12,13 @@
 local UnitFrameController = Apollo.GetPackage("Sezz:UnitFrameController-0.2").tPackage;
 if (UnitFrameController.GetUnit) then return; end
 
-local fmod, byte, len = math.fmod, string.byte, string.len;
 local tCache = {};
+
+-- Lua API
+local fmod, byte, len, rawget, setmetatable = math.fmod, string.byte, string.len, rawget, setmetatable;
+
+-- WildStar API
+local Apollo, GroupLib = Apollo, GroupLib;
 
 -----------------------------------------------------------------------------
 -- Helper Functions
@@ -221,6 +226,51 @@ local WrapGroupUnit = function(unit)
 end
 
 -----------------------------------------------------------------------------
+-- Updates
+-----------------------------------------------------------------------------
+
+local UnitUpdater = {};
+
+local function UpdateGroupMemberData(strUnit, nIndex, tData)
+	if (not tCache[strUnit]) then return; end
+	tCache[strUnit].bUpdated = false;
+
+	for k, v in pairs(tData) do
+		if (type(v) ~= "table" and tCache[strUnit][k] ~= v) then
+			-- ignore tMentoredBy...
+--			S.Log:debug("%s - Updated %s from %s to %s", tData.strCharacterName, k, tostring(tCache[strUnit][k]), tostring(v));
+			tCache[strUnit].bUpdated = true;
+			tCache[strUnit][k] = v;
+
+			if (k == "nLevel") then
+				Event_FireGenericEvent("Sezz_GroupUnitLevelChanged", nIndex);
+			elseif (k == "bDPS" or k == "bHealer" or k == "bTank" or k == "bMainTank") then
+				Event_FireGenericEvent("Sezz_GroupUnitRoleChanged", nIndex);
+			end
+		end
+	end
+
+	if (tCache[strUnit].bUpdated) then
+		S.Log:debug("Updated cached group unit data for "..tData.strCharacterName)
+		Event_FireGenericEvent("Sezz_GroupUnitUpdated", nIndex);
+	end
+end
+
+function UnitUpdater:OnGroupMemberFlagsChanged(nMemberIdx, bFromPromotion, tChangedFlags)
+	local bInRaid, bInGroup, nGroupSize = GroupLib.InRaid(), GroupLib.InGroup(), GroupLib.GetMemberCount();
+
+	if (bInGroup) then
+		UpdateGroupMemberData("Party"..nMemberIdx, nMemberIdx, GroupLib.GetGroupMember(nMemberIdx) or {});
+	end
+
+	if (bInRaid) then
+		UpdateGroupMemberData("Raid"..nMemberIdx, nMemberIdx, GroupLib.GetGroupMember(nMemberIdx) or {});
+	end
+end
+
+Apollo.RegisterEventHandler("Group_MemberFlagsChanged", "OnGroupMemberFlagsChanged", UnitUpdater);
+
+-----------------------------------------------------------------------------
 -- GetUnit
 -----------------------------------------------------------------------------
 
@@ -255,25 +305,7 @@ function UnitFrameController:GetUnit(strUnit, nIndex)
 					-- GetGroupMember
 					if (tCache[strUnit] and not tCache[strUnit]:IsRealUnit()) then
 						-- Update cached data
-						tCache[strUnit].bUpdated = false;
-
-						for k, v in pairs(unit) do
-							if (type(v) ~= "table" and tCache[strUnit][k] ~= v) then
-								-- ignore tMentoredBy...
---								S.Log:debug("%s - Updated %s from %s to %s", unit.strCharacterName, k, tostring(tCache[strUnit][k]), tostring(v));
-								tCache[strUnit].bUpdated = true;
-								tCache[strUnit][k] = v;
-
-								if (k == "nLevel") then
-									Event_FireGenericEvent("Sezz_GroupUnitLevelChanged", nIndex);
-								end
-							end
-						end
-
-						if (tCache[strUnit].bUpdated) then
---							S.Log:debug("Updated cached group unit data for "..unit.strCharacterName)
-							Event_FireGenericEvent("Sezz_GroupUnitUpdated", nIndex);
-						end
+						UpdateGroupMemberData(strUnit, nIndex, unit);
 					else
 						-- Unit changed (not cached or was a real unit)
 --						S.Log:debug("New cached group unit "..unit.strCharacterName)
