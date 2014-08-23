@@ -77,8 +77,7 @@ function Element:OnAuraUpdated(tAura)
 
 	local tAuraData, nIndex = self:GetAura(tAura.idBuff);
 	if (tAuraData and nIndex) then
-		tAuraData.tControl:UpdateDuration(tAura.fTimeRemaining);
-		tAuraData.tControl:UpdateCount(tAura.nCount);
+		tAuraData.tControl:Update(tAura);
 	end
 end
 
