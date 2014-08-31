@@ -54,7 +54,11 @@ function Element:Enable()
 	if (not self.tUnitFrame.unit.nMemberIdx) then
 		return self:Disable();
 	end
-	if (self.bEnabled) then return; end
+
+	if (self.bEnabled) then
+		-- Update on unit changes
+		return self:Update();
+	end
 
 	self.bEnabled = true;
 	Apollo.RegisterEventHandler("Sezz_GroupUnitRoleChanged", "OnGroupUnitRoleChanged", self);
