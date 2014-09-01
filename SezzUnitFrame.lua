@@ -152,7 +152,7 @@ local SetUnit = function(self, unit)
 
 	-- Update Unit
 	if (not self.unit or (self.unit and self.unit:GetId() ~= unit:GetId())) then
-		log:debug("[%s] Updated Unit: %s", self.strUnit, unit:GetName());
+--		log:debug("[%s] Updated Unit: %s", self.strUnit, unit:GetName());
 
 		self.unit = unit;
 		self:Enable();
