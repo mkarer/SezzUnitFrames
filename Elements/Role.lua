@@ -53,9 +53,7 @@ function Element:Enable()
 	-- Register Events
 	if (not self.tUnitFrame.unit.nMemberIdx) then
 		return self:Disable();
-	end
-
-	if (self.bEnabled) then
+	elseif (self.bEnabled) then
 		-- Update on unit changes
 		return self:Update();
 	end
