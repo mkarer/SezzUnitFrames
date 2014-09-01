@@ -246,6 +246,8 @@ local function UpdateGroupMemberData(strUnit, nIndex, tData)
 				Event_FireGenericEvent("Sezz_GroupUnitLevelChanged", nIndex);
 			elseif (k == "bDPS" or k == "bHealer" or k == "bTank" or k == "bMainTank") then
 				Event_FireGenericEvent("Sezz_GroupUnitRoleChanged", nIndex);
+			elseif (k == "bIsLeader" or k == "bRaidAssistant") then
+				Event_FireGenericEvent("Sezz_GroupLeaderChanged", nIndex);
 			end
 		end
 	end

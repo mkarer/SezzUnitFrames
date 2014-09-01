@@ -37,7 +37,7 @@ function Element:Update()
 	end
 end
 
-function Element:OnGroupMemberPromoted(nIndex)
+function Element:OnGroupLeaderChanged(nIndex)
 	local unit = self.tUnitFrame.unit;
 
 	if (unit.nMemberIdx and unit.nMemberIdx == nIndex) then
@@ -55,9 +55,7 @@ function Element:Enable()
 	end
 
 	self.bEnabled = true;
-	Apollo.RegisterEventHandler("Group_MemberPromoted", "OnGroupMemberPromoted", self);
-	Apollo.RegisterEventHandler("Group_MemberFlagsChanged", "OnGroupMemberPromoted", self);
-	Apollo.RegisterEventHandler("Group_FlagsChanged", "OnGroupMemberPromoted", self);
+	Apollo.RegisterEventHandler("Sezz_GroupLeaderChanged", "OnGroupLeaderChanged", self);
 	self:Update();
 end
 
@@ -66,9 +64,7 @@ function Element:Disable(bForce)
 	if (not self.bEnabled and not bForce) then return; end
 
 	self.bEnabled = false;
-	Apollo.RemoveEventHandler("Group_MemberPromoted", self);
-	Apollo.RemoveEventHandler("Group_MemberFlagsChanged", self);
-	Apollo.RemoveEventHandler("Group_FlagsChanged", self);
+	Apollo.RemoveEventHandler("Sezz_GroupLeaderChanged", self);
 end
 
 local IsSupported = function(tUnitFrame)
