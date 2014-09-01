@@ -18,7 +18,7 @@ local log, UnitFrameController;
 local setmetatable = setmetatable;
 
 -- WildStar API
-local Apollo, GroupLib = Apollo, GroupLib;
+local Apollo = Apollo;
 
 -----------------------------------------------------------------------------
 
