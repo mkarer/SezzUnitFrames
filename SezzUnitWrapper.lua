@@ -15,7 +15,7 @@ if (UnitFrameController.GetUnit) then return; end
 local tCache = {};
 
 -- Lua API
-local fmod, byte, len, rawget, setmetatable = math.fmod, string.byte, string.len, rawget, setmetatable;
+local fmod, byte, len, rawget, setmetatable, type = math.fmod, string.byte, string.len, rawget, setmetatable, type;
 
 -- WildStar API
 local Apollo, GroupLib = Apollo, GroupLib;
@@ -247,6 +247,7 @@ local function UpdateGroupMemberData(strUnit, nIndex, tData)
 			elseif (k == "bDPS" or k == "bHealer" or k == "bTank" or k == "bMainTank") then
 				Event_FireGenericEvent("Sezz_GroupUnitRoleChanged", nIndex);
 			elseif (k == "bIsLeader" or k == "bRaidAssistant") then
+				-- Group_MemberPromoted, Group_MemberFlagsChanged, Group_FlagsChanged
 				Event_FireGenericEvent("Sezz_GroupLeaderChanged", nIndex);
 			end
 		end
